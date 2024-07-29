@@ -48,8 +48,6 @@ const Footer = () => {
 
 const styles = {
   footer: {
-    position: 'fixed',  // Fixes the footer to the bottom
-    bottom: 0,          // Aligns the footer to the bottom
     width: '100%',      // Ensures the footer spans the entire width
     padding: '20px',
     backgroundColor: '#333',
@@ -57,7 +55,7 @@ const styles = {
     display: 'flex',
     justifyContent: 'space-around',
     flexWrap: 'wrap',
-    zIndex: 1000,       // Ensures it stays above other content
+    borderTop: '1px solid #444',
   },
   section: {
     margin: '10px 0',
@@ -67,15 +65,15 @@ const styles = {
     padding: 0,
     display: 'flex',
     flexDirection: 'column',
-    gap: '10px', // Adds space between the list items
+    gap: '10px',
   },
   listItem: {
-    marginBottom: '10px', // Additional spacing if needed
+    marginBottom: '10px',
   },
   socialIcons: {
     display: 'flex',
     flexDirection: 'column',
-    gap: '10px', // Adds space between social links
+    gap: '10px',
   },
   socialLink: {
     color: '#fff',
@@ -87,7 +85,6 @@ const styles = {
   bottom: {
     width: '100%',
     textAlign: 'center',
-    borderTop: '1px solid #444',
     paddingTop: '10px',
     marginTop: '10px',
   },
@@ -99,5 +96,4 @@ const styles = {
     gap: '20px',
   },
 };
-
 export default Footer;

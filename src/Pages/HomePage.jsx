@@ -9,8 +9,9 @@ const HomePage = () => {
     <div>
       {/* FeaturedTutorials is included here */}
       <HeroImage />
-      <NewsletterSignup />
+      
       <FeaturedTutorials />
+      <NewsletterSignup />
     </div>
   );
 };
