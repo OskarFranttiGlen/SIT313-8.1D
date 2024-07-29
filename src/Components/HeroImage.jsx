@@ -9,7 +9,7 @@ const HeroImage = () => {
         style={styles.image}
       />
       <div style={styles.overlay}>
-        <h1 style={styles.title}></h1>
+        <h1 style={styles.title}>1234</h1>
       </div>
     </div>
   );

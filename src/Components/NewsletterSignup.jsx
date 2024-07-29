@@ -16,6 +16,8 @@ const styles = {
     textAlign: 'center',
     backgroundColor: '#f4f4f4',
     borderTop: '1px solid #ddd',
+    position: 'relative', // Position it relative to its normal flow
+    zIndex: 1000,        // Ensure it appears above other content
   },
   input: {
     padding: '10px',

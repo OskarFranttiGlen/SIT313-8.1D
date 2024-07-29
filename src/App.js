@@ -1,22 +1,30 @@
+// src/App.js
 import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Navbar from './Components/Navbar';
-import HeroImage from './Components/HeroImage';
-import FeaturedArticles from './Components/FeauturedArticles';
-import FeaturedTutorials from './Components/FeaturedTutorials';
-import NewsletterSignup from './Components/NewsletterSignup';
+
 import Footer from './Components/Footer';
+import HomePage from './Pages/HomePage';
+import ArticlesPage from './Pages/ArticlesPage';
+import TutorialsPage from './Pages/TutorialsPage';
+import CreatePage from './Pages/CreatePage';
 import './App.css';
 
 const App = () => {
   return (
-    <div className="app">
-      <Navbar />
-      <HeroImage />
-      <FeaturedArticles />
-      <FeaturedTutorials />
-      <NewsletterSignup />
-      <Footer />
-    </div>
+    <Router>
+      <div className="app">
+        <Navbar />
+        <Routes>
+          <Route path="/" element={<div><HomePage/></div>} />
+          <Route path="/articles" element={<ArticlesPage />} />
+          <Route path="/tutorials" element={<TutorialsPage />} />
+          <Route path="/create" element={<CreatePage />} />
+        </Routes>
+
+        <Footer />
+      </div>
+    </Router>
   );
 };
 

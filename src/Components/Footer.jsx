@@ -48,12 +48,16 @@ const Footer = () => {
 
 const styles = {
   footer: {
+    position: 'fixed',  // Fixes the footer to the bottom
+    bottom: 0,          // Aligns the footer to the bottom
+    width: '100%',      // Ensures the footer spans the entire width
     padding: '20px',
     backgroundColor: '#333',
     color: '#fff',
     display: 'flex',
     justifyContent: 'space-around',
     flexWrap: 'wrap',
+    zIndex: 1000,       // Ensures it stays above other content
   },
   section: {
     margin: '10px 0',
