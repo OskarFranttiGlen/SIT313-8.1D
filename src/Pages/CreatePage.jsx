@@ -1,5 +1,8 @@
 // src/Pages/CreatePage.jsx
 import React, { useState } from 'react';
+import FormSelector from '../Components/FormSelector';
+import QuestionForm from '../Components/QuestionForm';
+import ArticleForm from '../Components/ArticleForm';
 
 const styles = {
   container: {
@@ -11,18 +14,6 @@ const styles = {
   header: {
     textAlign: 'center',
     marginBottom: '20px',
-  },
-  postTypeSelection: {
-    display: 'flex',
-    justifyContent: 'center',
-    marginBottom: '20px',
-  },
-  label: {
-    marginRight: '20px',
-    fontSize: '16px',
-  },
-  radio: {
-    marginRight: '8px',
   },
   postContent: {
     backgroundColor: '#f9f9f9',
@@ -50,14 +41,6 @@ const styles = {
     borderRadius: '4px',
     boxSizing: 'border-box',
   },
-  textarea: {
-    width: '100%',
-    padding: '10px',
-    border: '1px solid #ddd',
-    borderRadius: '4px',
-    boxSizing: 'border-box',
-    resize: 'vertical',
-  },
   button: {
     backgroundColor: '#007bff',
     color: '#fff',
@@ -80,68 +63,16 @@ const CreatePage = () => {
     <div style={styles.container}>
       <h1 style={styles.header}>New Post</h1>
       <form>
-        <div style={styles.postTypeSelection}>
-          <label style={styles.label}>
-            <input
-              type="radio"
-              value="question"
-              checked={postType === 'question'}
-              onChange={() => setPostType('question')}
-              style={styles.radio}
-            />
-            Question
-          </label>
-          <label style={styles.label}>
-            <input
-              type="radio"
-              value="article"
-              checked={postType === 'article'}
-              onChange={() => setPostType('article')}
-              style={styles.radio}
-            />
-            Article
-          </label>
-        </div>
+        <FormSelector postType={postType} setPostType={setPostType} />
 
         <div style={styles.postContent}>
-          <p>What do you want to ask or share</p>
+          <p>What do you want to ask or share?</p>
           <p style={styles.infoText}>
             This section is designed based on the type of the post. It could be developed by
-            conditional rendering. For post a {postType}, the following section would be appeared:
+            conditional rendering. For posting a {postType}, the following section would appear:
           </p>
 
-          {postType === 'question' ? (
-            <>
-              <div style={styles.inputGroup}>
-                <label htmlFor="title" style={styles.inputLabel}>Title</label>
-                <input
-                  type="text"
-                  id="title"
-                  placeholder="Start your question with how, what, why, etc."
-                  style={styles.input}
-                />
-              </div>
-              <div style={styles.inputGroup}>
-                <label htmlFor="problem" style={styles.inputLabel}>Describe your problem</label>
-                <textarea id="problem" rows="5" style={styles.textarea} />
-              </div>
-            </>
-          ) : (
-            <>
-              <div style={styles.inputGroup}>
-                <label htmlFor="title" style={styles.inputLabel}>Title</label>
-                <input type="text" id="title" placeholder="Enter a descriptive title" style={styles.input} />
-              </div>
-              <div style={styles.inputGroup}>
-                <label htmlFor="abstract" style={styles.inputLabel}>Abstract</label>
-                <textarea id="abstract" rows="3" placeholder="Enter a 1-paragraph abstract" style={styles.textarea} />
-              </div>
-              <div style={styles.inputGroup}>
-                <label htmlFor="articleText" style={styles.inputLabel}>Article Text</label>
-                <textarea id="articleText" rows="5" placeholder="Enter the article text" style={styles.textarea} />
-              </div>
-            </>
-          )}
+          {postType === 'question' ? <QuestionForm /> : <ArticleForm />}
 
           <div style={styles.inputGroup}>
             <label htmlFor="tags" style={styles.inputLabel}>Tags</label>
