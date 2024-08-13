@@ -8,6 +8,7 @@ import HomePage from './Pages/HomePage';
 import ArticlesPage from './Pages/ArticlesPage';
 import TutorialsPage from './Pages/TutorialsPage';
 import CreatePage from './Pages/CreatePage';
+import AuthPage from './Pages/AuthPage';
 import './App.css';
 
 const App = () => {
@@ -20,6 +21,7 @@ const App = () => {
           <Route path="/articles" element={<ArticlesPage />} />
           <Route path="/tutorials" element={<TutorialsPage />} />
           <Route path="/create" element={<CreatePage />} />
+          <Route path="/auth" element={<AuthPage />} />
         </Routes>
 
         <Footer />

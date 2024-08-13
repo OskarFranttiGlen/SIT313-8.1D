@@ -1,34 +1,60 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { auth } from '../firebaseConfig'; // Ensure this path correctly points to your Firebase config
+import { onAuthStateChanged, signOut } from 'firebase/auth';
 
 const Navbar = () => {
   const navigate = useNavigate();
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+    });
+
+    return () => unsubscribe(); // Cleanup subscription
+  }, []);
 
   const handlePostClick = () => {
     navigate('/create');
   };
 
   const handleLogoClick = () => {
-    navigate('/'); // Navigate to home page
+    navigate('/');
+  };
+
+  const handleAuthClick = () => {
+    if (user) {
+      signOut(auth)
+        .then(() => {
+          console.log('Logged out successfully');
+          navigate('/'); // Optional: redirect to home on logout
+        })
+        .catch((error) => console.error('Sign out error:', error));
+    } else {
+      navigate('/auth');
+    }
   };
 
   return (
     <nav style={styles.navbar}>
-      <button 
-        style={styles.logo} 
-        onClick={handleLogoClick} // Add onClick handler
-      >
+      <button style={styles.logo} onClick={handleLogoClick}>
         DEV@Deakin
       </button>
       <input type="text" placeholder="Search..." style={styles.searchBar} aria-label="Search" />
       <div style={styles.buttonContainer}>
-        <button 
-          style={styles.button} 
-          onClick={handlePostClick} // Add onClick handler
-        >
+        <button style={styles.button} onClick={handlePostClick}>
           Post
         </button>
-        <button style={styles.button}>Login</button>
+        {user ? (
+          <button style={styles.button} onClick={handleAuthClick}>
+            Logout ({user.displayName || user.email}) {/* Display user name or email */}
+          </button>
+        ) : (
+          <button style={styles.button} onClick={handleAuthClick}>
+            Login
+          </button>
+        )}
       </div>
     </nav>
   );
@@ -52,13 +78,11 @@ const styles = {
   logo: {
     fontSize: '20px',
     fontWeight: 'bold',
-    marginRight: '20px',
-    background: 'none', // Remove default button background
-    border: 'none', // Remove default button border
-    cursor: 'pointer', // Change cursor to pointer for better UX
-    padding: '0', // Remove default button padding
-    color: '#000', // Set text color to match design
-    textAlign: 'left', // Align text to the left
+    background: 'none',
+    border: 'none',
+    cursor: 'pointer',
+    padding: '0',
+    color: '#000',
   },
   searchBar: {
     flex: 1,
@@ -70,6 +94,7 @@ const styles = {
   },
   buttonContainer: {
     display: 'flex',
+    marginRight:'40px',
   },
   button: {
     marginLeft: '10px',
@@ -79,8 +104,9 @@ const styles = {
     backgroundColor: '#f4f4f4',
     cursor: 'pointer',
     transition: 'background-color 0.3s, border-color 0.3s',
+    fontFamily: 'Arial, sans-serif', // Ensuring font consistency
   },
-  buttonHover: {
+  buttonHover: { // Style for hover effect (not currently implemented in handlers)
     backgroundColor: '#e0e0e0',
     borderColor: '#ccc',
   },

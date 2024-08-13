@@ -1,20 +1,35 @@
 /* src/App.css */
 
+/* Ensure the app container fills the viewport height and handles Navbar spacing */
 .app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
   padding-top: 60px; /* Adjust based on the height of the Navbar */
-  box-sizing: border-box; /* Ensure padding doesn't affect layout */
+  box-sizing: border-box; /* Include padding and border in the element's total width and height */
 }
 
+/* Ensure the main content fills the remaining space and prevents horizontal overflow */
+.content {
+  flex: 1;
+  width: 100%;
+  overflow-x: hidden; /* Prevent horizontal scrolling */
+}
+
+/* Footer styling to keep it at the bottom */
 footer {
-  margin-top: auto; /* Push footer to the bottom */
+  margin-top: auto; /* Pushes footer to the bottom of the page */
 }
 
+/* Basic body styling */
 body {
   margin: 0;
   font-family: Arial, sans-serif;
-  padding-bottom: 80px;
+  padding-bottom: 80px; /* Space for footer */
+  overflow-x: hidden; /* Prevent horizontal overflow */
 }
 
+/* Navbar styles */
 .navbar {
   position: fixed;
   width: 100%;
