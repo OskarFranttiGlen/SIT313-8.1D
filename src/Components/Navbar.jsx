@@ -23,6 +23,10 @@ const Navbar = () => {
     navigate('/');
   };
 
+  const handleFindQuestionClick = () => {
+    navigate('/find-question');
+  };
+
   const handleAuthClick = () => {
     if (user) {
       signOut(auth)
@@ -43,18 +47,17 @@ const Navbar = () => {
       </button>
       <input type="text" placeholder="Search..." style={styles.searchBar} aria-label="Search" />
       <div style={styles.buttonContainer}>
-        <button style={styles.button} onClick={handlePostClick}>
-          Post
+        <button style={styles.button} onClick={handleFindQuestionClick}>
+          Find Questions
         </button>
-        {user ? (
-          <button style={styles.button} onClick={handleAuthClick}>
-            Logout ({user.displayName || user.email}) {/* Display user name or email */}
-          </button>
-        ) : (
-          <button style={styles.button} onClick={handleAuthClick}>
-            Login
+        {user && (
+          <button style={styles.button} onClick={handlePostClick}>
+            Post
           </button>
         )}
+        <button style={styles.button} onClick={handleAuthClick}>
+          {user ? `Logout (${user.displayName || user.email})` : 'Login'}
+        </button>
       </div>
     </nav>
   );
@@ -94,7 +97,7 @@ const styles = {
   },
   buttonContainer: {
     display: 'flex',
-    marginRight:'40px',
+    marginRight: '40px',
   },
   button: {
     marginLeft: '10px',
@@ -106,7 +109,7 @@ const styles = {
     transition: 'background-color 0.3s, border-color 0.3s',
     fontFamily: 'Arial, sans-serif', // Ensuring font consistency
   },
-  buttonHover: { // Style for hover effect (not currently implemented in handlers)
+  buttonHover: {
     backgroundColor: '#e0e0e0',
     borderColor: '#ccc',
   },

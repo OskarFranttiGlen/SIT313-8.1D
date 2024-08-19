@@ -9,6 +9,7 @@ import ArticlesPage from './Pages/ArticlesPage';
 import TutorialsPage from './Pages/TutorialsPage';
 import CreatePage from './Pages/CreatePage';
 import AuthPage from './Pages/AuthPage';
+import FindQuestion from './Pages/FindQuestion';
 import './App.css';
 
 const App = () => {
@@ -19,6 +20,7 @@ const App = () => {
         <Routes>
           <Route path="/" element={<div><HomePage/></div>} />
           <Route path="/articles" element={<ArticlesPage />} />
+          <Route path="/find-question" element={<FindQuestion />} />
           <Route path="/tutorials" element={<TutorialsPage />} />
           <Route path="/create" element={<CreatePage />} />
           <Route path="/auth" element={<AuthPage />} />
