@@ -3,9 +3,9 @@ import { collection, query, where, getDocs, addDoc, updateDoc, doc, serverTimest
 import { db } from '../../firebaseConfig';
 import { getAuth } from 'firebase/auth';
 import { Button, Card, User, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from '@nextui-org/react';
-import StatusChip from './StatusChip';
-import AnswerList from './AnswerList';
-import AnswerForm from './AnswerForm';
+import StatusChip from './StatusChip'; 
+import AnswerList from './AnswerList'; 
+import AnswerForm from './AnswerForm'; 
 import { Controlled as CodeMirror } from 'react-codemirror2';
 import { Chip } from '@nextui-org/react';
 
@@ -19,6 +19,7 @@ const QuestionCard = ({ question, selectedQuestion, handleExpand, handleDelete }
   const auth = getAuth();
   const user = auth.currentUser;
 
+  // Status options and corresponding colors for the status chip
   const statusOptions = ['Open', 'Answered', 'In Progress', 'Closed'];
   const statusColors = {
     Open: 'primary',
@@ -27,6 +28,7 @@ const QuestionCard = ({ question, selectedQuestion, handleExpand, handleDelete }
     Closed: 'danger',
   };
 
+  // Fetch answers from Firestore when the question is selected
   useEffect(() => {
     const fetchAnswers = async () => {
       if (selectedQuestion?.id === question.id) {
@@ -47,6 +49,7 @@ const QuestionCard = ({ question, selectedQuestion, handleExpand, handleDelete }
     fetchAnswers();
   }, [selectedQuestion, question.id]);
 
+  // Handle submitting a new answer
   const handleAnswerSubmit = async (e) => {
     e.stopPropagation();
     if (newAnswer.trim()) {
@@ -61,12 +64,14 @@ const QuestionCard = ({ question, selectedQuestion, handleExpand, handleDelete }
           isSolution: false,
         });
 
+        // If code is attached, update the document with the code
         if (isAttachingCode && newAnswerCode.trim()) {
           await updateDoc(doc(db, 'answers', newAnswerRef.id), {
             code: newAnswerCode.trim(),
           });
         }
 
+        // Refetch and sort answers
         const q = query(collection(db, 'answers'), where('questionId', '==', question.id));
         const querySnapshot = await getDocs(q);
         let answersData = querySnapshot.docs.map(doc => ({
@@ -79,6 +84,7 @@ const QuestionCard = ({ question, selectedQuestion, handleExpand, handleDelete }
 
         setAnswers(answersData);
 
+        // Reset form fields after successful submission
         setNewAnswer('');
         setNewAnswerCode('');
         setIsAttachingCode(false);
@@ -90,14 +96,17 @@ const QuestionCard = ({ question, selectedQuestion, handleExpand, handleDelete }
     }
   };
 
+  // Handle card click to expand or collapse details
   const handleCardClick = () => {
     handleExpand(question);
   };
 
+  // Stop event propagation to prevent unwanted triggering of parent click events
   const stopPropagation = (e) => {
     e.stopPropagation();
   };
 
+  // Handle status change for the question
   const handleStatusChange = async (newStatus) => {
     try {
       const questionRef = doc(db, 'questions', question.id);
@@ -110,12 +119,14 @@ const QuestionCard = ({ question, selectedQuestion, handleExpand, handleDelete }
     }
   };
 
+  // Handle marking an answer as the solution
   const handleMarkAsSolution = async (answerId) => {
     try {
       await updateDoc(doc(db, 'answers', answerId), {
         isSolution: true,
       });
 
+      // Update the local answers array to reflect the change
       const updatedAnswers = answers.map(answer =>
         answer.id === answerId ? { ...answer, isSolution: true } : { ...answer, isSolution: false }
       );
@@ -129,12 +140,14 @@ const QuestionCard = ({ question, selectedQuestion, handleExpand, handleDelete }
     }
   };
 
+  // Handle unmarking an answer as the solution
   const handleUnmarkAsSolution = async (answerId) => {
     try {
       await updateDoc(doc(db, 'answers', answerId), {
         isSolution: false,
       });
 
+      // Update the local answers array to reflect the change
       const updatedAnswers = answers.map(answer =>
         answer.id === answerId ? { ...answer, isSolution: false } : answer
       );
@@ -148,6 +161,7 @@ const QuestionCard = ({ question, selectedQuestion, handleExpand, handleDelete }
     }
   };
 
+  // Handle deleting an answer
   const handleDeleteAnswer = async (answerId) => {
     try {
       await deleteDoc(doc(db, 'answers', answerId));
@@ -158,6 +172,7 @@ const QuestionCard = ({ question, selectedQuestion, handleExpand, handleDelete }
   };
 
   return (
+    // List item for each question card, with hover effects and click event to expand details
     <li onClick={handleCardClick} className="hover:shadow-lg transition-shadow cursor-pointer mt-3">
       <Card 
         className={`${selectedQuestion?.id === question.id ? 'mb-0 rounded-b-none' : ''}`}
@@ -166,10 +181,12 @@ const QuestionCard = ({ question, selectedQuestion, handleExpand, handleDelete }
           borderBottomRightRadius: selectedQuestion?.id === question.id ? '0' : '',
         }}
       >
+        {/* Question title and status chip */}
         <div className="flex justify-between items-center">
           <h3 className="text-lg font-semibold ml-3 pt-3">{question.title}</h3>
           <StatusChip status={currentStatus} statusColors={statusColors} />
         </div>
+        {/* Display tags and user information */}
         <div className="ml-3 mt-2">
           <div className="flex flex-wrap gap-2">
             {question.tags?.map((tag, index) => (
@@ -188,6 +205,7 @@ const QuestionCard = ({ question, selectedQuestion, handleExpand, handleDelete }
         </div>
       </Card>
 
+      {/* Render additional details if the question is selected */}
       {selectedQuestion?.id === question.id && (
         <Card 
           className="p-4 pt-0 rounded-t-none"
@@ -196,18 +214,21 @@ const QuestionCard = ({ question, selectedQuestion, handleExpand, handleDelete }
             borderTopRightRadius: '0',
           }}
         >
+          {/* Problem description and code display */}
           <p className="ml-3 mt-3 mb-3">{question.problem}</p>
           <div className="border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-blue-500 overflow-hidden ml-3 mr-3">
-          <CodeMirror
-            value={question.code || ''}
-            options={{
-              mode: 'javascript',
-              theme: 'dracula',
-              readOnly: true, // Make sure the code is read-only
-              lineNumbers: true,
-            }}
-          />
-            </div>
+            <CodeMirror
+              value={question.code || ''}
+              options={{
+                mode: 'javascript',
+                theme: 'dracula',
+                readOnly: true, // Ensure the code is read-only
+                lineNumbers: true,
+              }}
+            />
+          </div>
+
+          {/* Answer list and form for adding new answers */}
           <AnswerList 
             answers={answers}
             handleMarkAsSolution={handleMarkAsSolution}
@@ -224,8 +245,10 @@ const QuestionCard = ({ question, selectedQuestion, handleExpand, handleDelete }
             handleAnswerSubmit={handleAnswerSubmit}
             isLoading={isLoading}
             stopPropagation={stopPropagation}
-            questionStatus = {currentStatus}
+            questionStatus={currentStatus} // Pass current status to the form
           />
+
+          {/* Dropdown for changing the status of the question and a delete button */}
           <div className="flex items-center mt-4 ml-3">
             <Dropdown>
               <DropdownTrigger>

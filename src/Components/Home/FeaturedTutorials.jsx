@@ -1,7 +1,8 @@
 import React from 'react';
-import { Link } from '@nextui-org/react'; // Import the Link component from NextUI
-import CardComponent from './CardComponent';
+import { Link } from '@nextui-org/react'; 
+import CardComponent from './CardComponent'; 
 
+// Array of tutorial objects, each containing an id, image URL, description, rating, and author
 const tutorials = [
   {
     id: 1,
@@ -26,16 +27,25 @@ const tutorials = [
   }
 ];
 
+// The FeaturedTutorials component renders a section displaying featured tutorials
 const FeaturedTutorials = () => {
   return (
     <div className="py-8 flex flex-col items-center">
+      {/* Section title */}
       <h2 className="mb-6 text-2xl font-bold text-center">Featured Tutorials</h2>
+      
+      {/* Container for the tutorial cards */}
       <div className="flex gap-6 justify-center flex-wrap">
+        {/* Map over the tutorials array and render a CardComponent for each tutorial */}
         {tutorials.map(tutorial => (
           <CardComponent key={tutorial.id} {...tutorial} />
         ))}
       </div>
-      <Link href="/all-tutorials" className="mt-8 text-blue-500 hover:underline">See all Tutorials</Link>
+
+      {/* Link to view all tutorials */}
+      <Link href="/all-tutorials" className="mt-8 text-blue-500 hover:underline">
+        See all Tutorials
+      </Link>
     </div>
   );
 };

@@ -1,46 +1,13 @@
 import React from 'react';
 
-const cardStyle = {
-  background: '#fff',
-  border: '1px solid #ddd',
-  borderRadius: '8px',
-  overflow: 'hidden',
-  width: '300px',
-  boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
-};
-
-const imageStyle = {
-  width: '100%',
-  height: '150px',
-  objectFit: 'cover'
-};
-
-const descriptionStyle = {
-  padding: '15px'
-};
-
-const footerStyle = {
-  display: 'flex',
-  justifyContent: 'space-between',
-  padding: '0 15px 15px'
-};
-
-const ratingStyle = {
-  color: '#f39c12'
-};
-
-const authorStyle = {
-  color: '#7f8c8d'
-};
-
 const CardComponent = ({ image, description, rating, author }) => {
   return (
-    <div style={cardStyle}>
-      <img src={image} alt="Article" style={imageStyle} />
-      <p style={descriptionStyle}>{description}</p>
-      <div style={footerStyle}>
-        <span style={ratingStyle}>Rating: {rating}</span>
-        <span style={authorStyle}>By {author}</span>
+    <div className="bg-white border border-gray-300 rounded-lg overflow-hidden w-72 shadow-md">
+      <img src={image} alt="Article" className="w-full h-36 object-cover" />
+      <p className="p-4 text-gray-700">{description}</p>
+      <div className="flex justify-between items-center px-4 pb-4">
+        <span className="text-yellow-500">Rating: {rating}</span>
+        <span className="text-gray-500">By {author}</span>
       </div>
     </div>
   );

@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
 import { collection, addDoc } from 'firebase/firestore';
 import { db } from '../../firebaseConfig';
-import { getAuth } from 'firebase/auth';
-import { Controlled as CodeMirror } from 'react-codemirror2';
+import { getAuth } from 'firebase/auth'; 
+import { Controlled as CodeMirror } from 'react-codemirror2'; 
 import 'codemirror/lib/codemirror.css';
 import 'codemirror/theme/material.css';
 import 'codemirror/mode/javascript/javascript';
 import { Button, Card, Spacer, Chip, CircularProgress, Input, Textarea } from '@nextui-org/react';
 
-const initialTags = [];
+const initialTags = []; // Initial tags state
 
 const QuestionForm = () => {
+  // State hooks to manage form data and UI states
   const [title, setTitle] = useState('');
   const [problem, setProblem] = useState('');
   const [code, setCode] = useState('');
@@ -20,9 +21,10 @@ const QuestionForm = () => {
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
 
-  const auth = getAuth();
+  const auth = getAuth(); // Get the current user
   const user = auth.currentUser;
 
+  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -37,8 +39,8 @@ const QuestionForm = () => {
         tags,
         status: 'Open', // Set the initial status to 'Open'
         createdAt: new Date(),
-        userId: user ? user.uid : 'anonymous',
-        userEmail: user ? user.email : 'anonymous',
+        userId: user ? user.uid : 'anonymous', // Store user ID or 'anonymous' if no user is logged in
+        userEmail: user ? user.email : 'anonymous', // Optionally store user email
       });
       setSuccess(true);
       setTitle('');
@@ -54,10 +56,12 @@ const QuestionForm = () => {
     }
   };
 
+  // Handle tag input change
   const handleTagInput = (e) => {
     setTagInput(e.target.value);
   };
 
+  // Handle adding a new tag
   const handleAddTag = (e) => {
     if (e.key === 'Enter' && tagInput.trim() !== '' && !tags.includes(tagInput.trim())) {
       e.preventDefault();
@@ -66,15 +70,19 @@ const QuestionForm = () => {
     }
   };
 
+  // Handle removing a tag
   const handleCloseTag = (tagToRemove) => {
     setTags(tags.filter(tag => tag !== tagToRemove));
   };
 
   return (
+    // Outer container for the form, with centered alignment and background
     <div className="flex justify-center items-start min-h-screen bg-gray-100 p-6">
       <Card className="p-6 bg-white rounded-lg shadow-lg w-full max-w-2xl mt-10">
+        {/* Form title */}
         <h2 className="text-2xl font-bold mb-4">Ask a Question</h2>
         <form onSubmit={handleSubmit}>
+          {/* Title input field */}
           <div className="mb-4">
             <Input
               type="text"
@@ -82,9 +90,9 @@ const QuestionForm = () => {
               required
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              
             />
           </div>
+          {/* Problem description textarea */}
           <div className="mb-4">
             <Textarea
               placeholder="Describe your problem"
@@ -94,14 +102,16 @@ const QuestionForm = () => {
               required
             />
           </div>
+          {/* Code input field with CodeMirror */}
           <div className="mb-4">
             <label htmlFor="code" className="block mb-2 text-gray-700 font-semibold">Code</label>
             <div className="border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-blue-500 overflow-hidden">
               <CodeMirror
                 value={code}
                 options={{
-
-                  lineNumbers: true,
+                  mode: 'javascript', // Set code mode to JavaScript
+                  theme: 'material', // Set CodeMirror theme
+                  lineNumbers: true, // Display line numbers
                 }}
                 onBeforeChange={(editor, data, value) => {
                   setCode(value);
@@ -110,6 +120,7 @@ const QuestionForm = () => {
               />
             </div>
           </div>
+          {/* Tags input and display */}
           <div className="mb-4">
             <label htmlFor="tags" className="block mb-2 text-gray-700 font-semibold">Tags</label>
             <div className="flex flex-wrap items-center gap-2">
@@ -117,8 +128,8 @@ const QuestionForm = () => {
                 <Chip
                   key={index}
                   onClose={() => handleCloseTag(tag)}
-                  color="secondary" variant="flat"
-
+                  color="secondary"
+                  variant="flat"
                 >
                   {tag}
                 </Chip>
@@ -132,11 +143,14 @@ const QuestionForm = () => {
               />
             </div>
           </div>
+          {/* Submit button with loading indicator */}
           <Button type="submit" disabled={loading} color="primary" variant="solid">
             {loading ? <CircularProgress size="sm" /> : 'Submit'}
           </Button>
           <Spacer y={1} />
+          {/* Success message */}
           {success && <p className="text-green-500">Your question has been submitted successfully!</p>}
+          {/* Error message */}
           {error && <p className="text-red-500">{error}</p>}
         </form>
       </Card>

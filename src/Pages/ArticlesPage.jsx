@@ -1,6 +1,6 @@
 import React from 'react';
-import { Card, Spacer } from '@nextui-org/react';
-
+import { Card, Spacer } from '@nextui-org/react'; 
+// Array of article objects, each containing an id, title, and description
 const articles = [
   {
     id: 1,
@@ -22,16 +22,25 @@ const articles = [
 const ArticlesPage = () => {
   return (
     <div className="p-6">
+      {/* Page title */}
       <h1 className="text-3xl font-bold mb-8">Articles</h1>
+
+      {/* Grid container for the articles */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {/* Map over the articles array and render a Card for each article */}
         {articles.map((article) => (
           <Card key={article.id} hoverable clickable>
+            {/* Card Header with article title */}
             <Card.Header>
               <h4 className="text-xl font-semibold">{article.title}</h4>
             </Card.Header>
+            
+            {/* Card Body with article description */}
             <Card.Body>
               <p>{article.description}</p>
             </Card.Body>
+
+            {/* Spacer for adding space below the card content */}
             <Spacer y={1} />
           </Card>
         ))}

@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { collection, addDoc } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { db, storage } from '../../firebaseConfig'; // Ensure you import your Firebase config
-import { getAuth } from 'firebase/auth'; // Import Firebase auth to get current user
+import { db, storage } from '../../firebaseConfig'; 
+import { getAuth } from 'firebase/auth'; 
 import { Input, Textarea, Button, Card, Spacer } from '@nextui-org/react';
-import ReactMarkdown from 'react-markdown'; // Import react-markdown
+import ReactMarkdown from 'react-markdown'; 
 
 const ArticleForm = () => {
+  // State hooks to manage form data and UI state
   const [title, setTitle] = useState('');
   const [abstract, setAbstract] = useState('');
   const [articleText, setArticleText] = useState('');
@@ -17,15 +18,17 @@ const ArticleForm = () => {
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
 
-  const auth = getAuth();
+  const auth = getAuth(); // Get the current user
   const user = auth.currentUser;
 
+  // Handle image file selection
   const handleImageChange = (e) => {
     if (e.target.files[0]) {
       setImage(e.target.files[0]);
     }
   };
 
+  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -55,6 +58,7 @@ const ArticleForm = () => {
         userEmail: user ? user.email : 'anonymous', // Optionally store user email
       });
 
+      // Reset form state on successful submission
       setSuccess(true);
       setTitle('');
       setAbstract('');
@@ -71,10 +75,13 @@ const ArticleForm = () => {
   };
 
   return (
+    // Outer container for the form, with centered alignment and background
     <div className="flex justify-center items-start min-h-screen bg-gray-100 p-6">
       <Card className="p-6 bg-white rounded-lg shadow-lg w-full max-w-2xl mt-10">
+        {/* Form title */}
         <h2 className="text-2xl font-bold mb-4">Submit an Article</h2>
         <form onSubmit={handleSubmit}>
+          {/* Title input field */}
           <div className="mb-4">
             <Input
               clearable
@@ -88,6 +95,7 @@ const ArticleForm = () => {
               placeholder="Title"
             />
           </div>
+          {/* Abstract input field */}
           <div className="mb-4">
             <Textarea
               bordered
@@ -101,6 +109,7 @@ const ArticleForm = () => {
               placeholder="Abstract"
             />
           </div>
+          {/* Article text input field */}
           <div className="mb-4">
             <Textarea
               bordered
@@ -114,12 +123,14 @@ const ArticleForm = () => {
               placeholder="Article Text"
             />
           </div>
+          {/* Preview of the article using ReactMarkdown */}
           <div className="mb-4">
             <label className="block mb-2 text-gray-700 font-semibold">Preview</label>
             <Card className="p-4 bg-gray-100 rounded-lg">
               <ReactMarkdown>{articleText}</ReactMarkdown>
             </Card>
           </div>
+          {/* Tags input field */}
           <div className="mb-4">
             <Input
               clearable
@@ -131,6 +142,7 @@ const ArticleForm = () => {
               placeholder="Tags (comma separated)"
             />
           </div>
+          {/* Image upload field */}
           <div className="mb-4">
             <label htmlFor="image" className="block mb-2 text-gray-700 font-semibold">Upload Image</label>
             <input
@@ -141,11 +153,14 @@ const ArticleForm = () => {
               className="mb-4 w-full"
             />
           </div>
+          {/* Submit button */}
           <Button type="submit" disabled={loading} auto className="w-full">
             {loading ? 'Submitting...' : 'Submit'}
           </Button>
           <Spacer y={1} />
+          {/* Success message */}
           {success && <p className="text-green-500">Your article has been submitted successfully!</p>}
+          {/* Error message */}
           {error && <p className="text-red-500">{error}</p>}
         </form>
       </Card>
