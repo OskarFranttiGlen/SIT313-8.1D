@@ -1,15 +1,16 @@
-// src/Pages/HomePage.jsx
-import React from 'react';
-import FeaturedTutorials from '../Components/FeaturedTutorials';
-import HeroImage from '../Components/HeroImage';
-import NewsletterSignup
- from '../Components/NewsletterSignup';
+import React, { useEffect } from 'react';
+import FeaturedTutorials from '../Components/Home/FeaturedTutorials';
+import HeroImage from '../Components/Home/HeroImage';
+import NewsletterSignup from '../Components/Home/NewsletterSignup';
+
 const HomePage = () => {
+  useEffect(() => {
+    document.title = 'Home';
+  }, []);
+
   return (
     <div>
-      {/* FeaturedTutorials is included here */}
       <HeroImage />
-      
       <FeaturedTutorials />
       <NewsletterSignup />
     </div>

@@ -1,9 +1,8 @@
 // src/App.js
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Navbar from './Components/Navbar';
-
-import Footer from './Components/Footer';
+import Navbar from './Components/Navigation/Navbar';
+import Footer from './Components/Navigation/Footer';
 import HomePage from './Pages/HomePage';
 import ArticlesPage from './Pages/ArticlesPage';
 import TutorialsPage from './Pages/TutorialsPage';
@@ -11,7 +10,6 @@ import CreatePage from './Pages/CreatePage';
 import AuthPage from './Pages/AuthPage';
 import FindQuestion from './Pages/FindQuestion';
 import './App.css';
-
 const App = () => {
   return (
     <Router>

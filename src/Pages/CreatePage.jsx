@@ -1,67 +1,42 @@
-import React, { useState } from 'react';
-import ArticleForm from '../Components/Forms/ArticleForm';
-import QuestionForm from '../Components/Forms/QuestionForm';
-import FormContainer from '../Components/Forms/FormContainer';
-
-const styles = {
-  container: {
-    maxWidth: '1000px',  // Increased the maxWidth to allow more space
-    width: '100%', // Ensure it takes the full available width
-    margin: '0 auto',
-    padding: '20px',
-    fontFamily: 'Arial, sans-serif',
-  },
-  header: {
-    textAlign: 'center',
-    marginBottom: '20px',
-  },
-  postTypeSelection: {
-    display: 'flex',
-    justifyContent: 'center',
-    marginBottom: '20px',
-  },
-  label: {
-    marginRight: '20px',
-    fontSize: '16px',
-  },
-  radio: {
-    marginRight: '8px',
-  },
-};
+import React, { useState, useEffect } from 'react';
+import ArticleForm from '../Components/Create/ArticleForm';
+import QuestionForm from '../Components/Create/QuestionForm';
 
 const CreatePage = () => {
   const [postType, setPostType] = useState('question');
 
+  useEffect(() => {
+    document.title = 'Create Post';
+  }, []);
+
   return (
-    <div style={styles.container}>
-      <h1 style={styles.header}>New Post</h1>
-      <div style={styles.postTypeSelection}>
-        <label style={styles.label}>
+    <div className="max-w-4xl w-full mx-auto p-5 font-sans">
+      <h1 className="text-center text-3xl font-semibold mb-8">New Post</h1>
+      <div className="flex justify-center mb-6">
+        <label className="mr-5 text-lg">
           <input
             type="radio"
             value="question"
             checked={postType === 'question'}
             onChange={() => setPostType('question')}
-            style={styles.radio}
+            className="mr-2"
           />
           Question
         </label>
-        <label style={styles.label}>
+        <label className="text-lg">
           <input
             type="radio"
             value="article"
             checked={postType === 'article'}
             onChange={() => setPostType('article')}
-            style={styles.radio}
+            className="mr-2"
           />
           Article
         </label>
       </div>
       
       {/* Wrap the forms with FormContainer */}
-      <FormContainer className="form-wide">
-        {postType === 'question' ? <QuestionForm /> : <ArticleForm />}
-      </FormContainer>
+      {postType === 'question' ? <QuestionForm /> : <ArticleForm />}
     </div>
   );
 };

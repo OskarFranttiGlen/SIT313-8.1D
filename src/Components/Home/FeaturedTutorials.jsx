@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from '@nextui-org/react'; // Import the Link component from NextUI
 import CardComponent from './CardComponent';
 
 const tutorials = [
@@ -25,43 +26,16 @@ const tutorials = [
   }
 ];
 
-const containerStyle = {
-  padding: '20px',
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-};
-
-const titleStyle = {
-  marginBottom: '20px',
-  fontSize: '24px',
-  fontWeight: 'bold',
-};
-
-const tutorialsRowStyle = {
-  display: 'flex',
-  gap: '20px',
-  justifyContent: 'center',
-  flexWrap: 'wrap', // To handle responsiveness
-};
-
-const seeAllLinkStyle = {
-  display: 'block',
-  marginTop: '20px',
-  color: '#007bff',
-  textDecoration: 'none'
-};
-
 const FeaturedTutorials = () => {
   return (
-    <div style={containerStyle}>
-      <div style={titleStyle}>Featured Tutorials</div>
-      <div style={tutorialsRowStyle}>
+    <div className="py-8 flex flex-col items-center">
+      <h2 className="mb-6 text-2xl font-bold text-center">Featured Tutorials</h2>
+      <div className="flex gap-6 justify-center flex-wrap">
         {tutorials.map(tutorial => (
           <CardComponent key={tutorial.id} {...tutorial} />
         ))}
       </div>
-      <a href="/all-tutorials" style={seeAllLinkStyle}>See all Tutorials</a>
+      <Link href="/all-tutorials" className="mt-8 text-blue-500 hover:underline">See all Tutorials</Link>
     </div>
   );
 };

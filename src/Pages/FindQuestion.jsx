@@ -1,8 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import { collection, getDocs, doc, deleteDoc } from 'firebase/firestore';
-import { db } from '../firebaseConfig'; // Ensure this path correctly points to your Firebase config
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import './FindQuestion.css';
+import React, { useEffect, useState, useCallback } from 'react';
+import { collection, getDocs, doc, deleteDoc, query, where, notEqual } from 'firebase/firestore';
+import { db, auth } from '../firebaseConfig'; // Ensure this path is correct
+import Filters from '../Components/FindQuestion/FiltersComponent';
+import QuestionList from '../Components/FindQuestion/QuestionList';
+import QuestionToggle from '../Components/FindQuestion/QuestionToggle';
+import { Spinner } from '@nextui-org/react';
+import { onAuthStateChanged } from 'firebase/auth'; // Import onAuthStateChanged to track user auth state
 
 const FindQuestion = () => {
   const [questions, setQuestions] = useState([]);
@@ -11,11 +14,34 @@ const FindQuestion = () => {
   const [selectedQuestion, setSelectedQuestion] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [selectedView, setSelectedView] = useState('all');
+  const [user, setUser] = useState(null); // Add user state to track the current user
+
+  useEffect(() => {
+    document.title = "Find Question";
+
+    // Track user authentication state
+    const unsubscribe = onAuthStateChanged(auth, currentUser => {
+      setUser(currentUser);
+    });
+
+    return () => unsubscribe();
+  }, []);
 
   useEffect(() => {
     const fetchQuestions = async () => {
       try {
-        const querySnapshot = await getDocs(collection(db, 'questions'));
+        let queryRef = collection(db, 'questions');
+
+        if (selectedView === 'mine' && user) {
+          // Fetch only questions created by the logged-in user
+          queryRef = query(queryRef, where('userEmail', '==', user.email));
+        } else if (selectedView === 'all' && user) {
+          // Fetch all questions except those created by the logged-in user
+          queryRef = query(queryRef, where('userEmail', '!=', user.email));
+        }
+
+        const querySnapshot = await getDocs(queryRef);
         const questionsData = querySnapshot.docs.map(doc => ({
           id: doc.id,
           ...doc.data(),
@@ -30,44 +56,48 @@ const FindQuestion = () => {
       }
     };
 
-    fetchQuestions();
-  }, []);
+    if (user) {
+      fetchQuestions();
+    }
+  }, [selectedView, user]); // Add user as a dependency to refetch questions when user changes
 
-  useEffect(() => {
-    applyFilters();
-  }, [filter, questions]);
-
-  const applyFilters = () => {
+  const applyFilters = useCallback(() => {
     let filtered = [...questions];
-  
+
     if (filter.title) {
       filtered = filtered.filter(q =>
         q.title.toLowerCase().includes(filter.title.toLowerCase())
       );
     }
-  
+
     if (filter.tag) {
       filtered = filtered.filter(q =>
         q.tags && q.tags.includes(filter.tag)
       );
     }
-  
+
     if (filter.date) {
       filtered = filtered.filter(q => {
         const questionDate = new Date(q.createdAt.seconds * 1000);
-        const localQuestionDate = questionDate.toLocaleDateString('en-CA'); // Format as YYYY-MM-DD
+        const localQuestionDate = questionDate.toLocaleDateString('en-CA');
         return localQuestionDate === filter.date;
       });
     }
-  
+
     setFilteredQuestions(filtered);
-  };
-  
+  }, [questions, filter]);
+
+  useEffect(() => {
+    applyFilters();
+  }, [filter, questions, applyFilters]);
 
   const handleDelete = async (id) => {
     try {
       await deleteDoc(doc(db, 'questions', id));
-      setQuestions(questions.filter(question => question.id !== id));
+      const updatedQuestions = questions.filter(question => question.id !== id);
+      setQuestions(updatedQuestions);
+      setFilteredQuestions(updatedQuestions);
+      applyFilters();
     } catch (err) {
       console.error("Error deleting document:", err);
       setError('Failed to delete the question. Please try again.');
@@ -93,92 +123,37 @@ const FindQuestion = () => {
     setFilteredQuestions(reorderedQuestions);
   };
 
+  const handleViewChange = (view) => {
+    setSelectedView(view);
+  };
+
   if (loading) {
-    return <p>Loading questions...</p>;
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <Spinner color="primary" />
+      </div>
+    );
   }
 
   if (error) {
-    return <p>{error}</p>;
+    return <p className="text-red-500">{error}</p>;
   }
 
   return (
-    <div className="questions-container">
-      <h2>All Questions</h2>
-
-      <div className="filters">
-        <input
-          type="text"
-          name="title"
-          placeholder="Filter by title"
-          value={filter.title}
-          onChange={handleFilterChange}
-        />
-        <input
-          type="text"
-          name="tag"
-          placeholder="Filter by tag"
-          value={filter.tag}
-          onChange={handleFilterChange}
-        />
-        <input
-          type="date"
-          name="date"
-          placeholder="Filter by date"
-          value={filter.date}
-          onChange={handleFilterChange}
-        />
-      </div>
-
+    <div className="questions-container p-6">
+      <h2 className="text-2xl font-bold mb-4">Find Question</h2>
+      <QuestionToggle selectedView={selectedView} handleViewChange={handleViewChange} />
+      <Filters filter={filter} handleFilterChange={handleFilterChange} />
       {filteredQuestions.length === 0 ? (
         <p>No questions found.</p>
       ) : (
-        <DragDropContext onDragEnd={onDragEnd}>
-          <Droppable droppableId="questions">
-            {(provided) => (
-              <ul
-                {...provided.droppableProps}
-                ref={provided.innerRef}
-                className="question-list"
-              >
-                {filteredQuestions.map((question, index) => {
-                  const title = question.title || 'Untitled';
-                  const problem = question.problem || 'No description provided';
-                  const tags = question.tags || [];
-                  const createdAt = question.createdAt
-                    ? new Date(question.createdAt.seconds * 1000).toLocaleString()
-                    : 'Unknown date';
-
-                  return (
-                    <Draggable key={question.id} draggableId={question.id} index={index}>
-                      {(provided) => (
-                        <li
-                          ref={provided.innerRef}
-                          {...provided.draggableProps}
-                          {...provided.dragHandleProps}
-                          className="question-card"
-                        >
-                          <div className="question-summary" onClick={() => handleExpand(question)}>
-                            <h3>{title}</h3>
-                            <p>{problem}</p>
-                            <span className="tags">{tags.join(', ')}</span>
-                            <small>Posted on: {createdAt}</small>
-                          </div>
-                          {selectedQuestion?.id === question.id && (
-                            <div className="question-details">
-                              <p>{problem}</p>
-                              <button onClick={() => handleDelete(question.id)}>Delete</button>
-                            </div>
-                          )}
-                        </li>
-                      )}
-                    </Draggable>
-                  );
-                })}
-                {provided.placeholder}
-              </ul>
-            )}
-          </Droppable>
-        </DragDropContext>
+        <QuestionList
+          filteredQuestions={filteredQuestions}
+          selectedQuestion={selectedQuestion}
+          handleExpand={handleExpand}
+          handleDelete={handleDelete}
+          onDragEnd={onDragEnd}
+        />
       )}
     </div>
   );

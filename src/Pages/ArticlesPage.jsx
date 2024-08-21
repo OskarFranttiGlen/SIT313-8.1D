@@ -1,6 +1,5 @@
-// src/Pages/ArticlesPage.jsx
 import React from 'react';
-import { Card } from 'semantic-ui-react';
+import { Card, Spacer } from '@nextui-org/react';
 
 const articles = [
   {
@@ -22,18 +21,21 @@ const articles = [
 
 const ArticlesPage = () => {
   return (
-    <div className="articles-page">
-      <h1>Articles</h1>
-      <Card.Group>
-        {articles.map(article => (
-          <Card key={article.id}>
-            <Card.Content>
-              <Card.Header>{article.title}</Card.Header>
-              <Card.Description>{article.description}</Card.Description>
-            </Card.Content>
+    <div className="p-6">
+      <h1 className="text-3xl font-bold mb-8">Articles</h1>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {articles.map((article) => (
+          <Card key={article.id} hoverable clickable>
+            <Card.Header>
+              <h4 className="text-xl font-semibold">{article.title}</h4>
+            </Card.Header>
+            <Card.Body>
+              <p>{article.description}</p>
+            </Card.Body>
+            <Spacer y={1} />
           </Card>
         ))}
-      </Card.Group>
+      </div>
     </div>
   );
 };

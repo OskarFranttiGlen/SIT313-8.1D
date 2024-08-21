@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Input, Button } from '@nextui-org/react';
 
 const NewsletterSignup = () => {
   const [email, setEmail] = useState('');
@@ -12,7 +13,7 @@ const NewsletterSignup = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'x-api-key': '89f2d4c8-3a5b-49ea-bf77-9828f842d8b9', // Use the API key from the .env file
+          'x-api-key': process.env.REACT_APP_API_KEY, // Use the API key from the .env file
         },
         body: JSON.stringify({ 
           firstname: 'John', // Replace with actual data
@@ -33,44 +34,28 @@ const NewsletterSignup = () => {
   };
 
   return (
-    <div style={styles.container}>
-      <h2>SIGN UP FOR OUR DAILY INSIDER</h2>
-      <input 
-        type="email" 
-        placeholder="Enter your email" 
-        style={styles.input} 
-        value={email} 
-        onChange={(e) => setEmail(e.target.value)} 
-      />
-      <button style={styles.button} onClick={handleSubscribe}>Subscribe</button>
-      {message && <p>{message}</p>}
+    <div className="p-10 text-center bg-white border-t border-gray-300 relative z-50">
+      <h2 className="text-2xl font-bold mb-4">SIGN UP FOR OUR DAILY INSIDER</h2>
+      <div className="flex justify-center mb-4">
+        <Input 
+          clearable 
+          type="email" 
+          placeholder="Enter your email" 
+          value={email} 
+          onChange={(e) => setEmail(e.target.value)} 
+          className="mr-2 flex-1 max-w-xs"
+        /> 
+        <Button 
+          auto
+          onClick={handleSubscribe}
+          color="primary" variant="solid"
+        >
+          Subscribe
+        </Button>
+      </div>
+      {message && <p className="text-sm text-gray-700">{message}</p>}
     </div>
   );
-};
-
-const styles = {
-  container: {
-    padding: '20px',
-    textAlign: 'center',
-    backgroundColor: '#f4f4f4',
-    borderTop: '1px solid #ddd',
-    position: 'relative',
-    zIndex: 1000,
-  },
-  input: {
-    padding: '10px',
-    marginRight: '10px',
-    borderRadius: '5px',
-    border: '1px solid #ddd',
-  },
-  button: {
-    padding: '10px 20px',
-    borderRadius: '5px',
-    border: '1px solid #ddd',
-    backgroundColor: '#007bff',
-    color: '#fff',
-    cursor: 'pointer',
-  },
 };
 
 export default NewsletterSignup;
