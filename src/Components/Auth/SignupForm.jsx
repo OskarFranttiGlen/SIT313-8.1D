@@ -50,49 +50,39 @@ const SignupForm = () => {
         <form onSubmit={handleSignup} className="space-y-4">
           {/* First Name input field */}
           <Input
-            clearable
-            bordered
-            fullWidth
-            size="lg"
-            placeholder="First Name"
+            isRequired
+            type="name"
+            label="First Name"
             value={firstName}
             onChange={(e) => setFirstName(e.target.value)}
-            required
+
           />
           {/* Last Name input field */}
           <Input
-            clearable
-            bordered
-            fullWidth
-            size="lg"
-            placeholder="Last Name"
+            isRequired
+            type="name"
+            label="Last Name"
             value={lastName}
             onChange={(e) => setLastName(e.target.value)}
-            required
+
           />
           {/* Email input field */}
           <Input
-            clearable
-            bordered
-            fullWidth
-            size="lg"
-            placeholder="Email"
+            isRequired
             type="email"
+            label="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            required
+            
           />
           {/* Password input field */}
           <Input
-            clearable
-            bordered
-            fullWidth
-            size="lg"
-            placeholder="Password"
+            isRequired
             type="password"
+            label="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            required
+
           />
           {/* Error message display */}
           {error && <p className="text-red-500">{error}</p>}

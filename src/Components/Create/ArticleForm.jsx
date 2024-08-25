@@ -3,15 +3,18 @@ import { collection, addDoc } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { db, storage } from '../../firebaseConfig'; 
 import { getAuth } from 'firebase/auth'; 
-import { Input, Textarea, Button, Card, Spacer } from '@nextui-org/react';
+import { Input, Textarea, Button, Card, Spacer, Chip } from '@nextui-org/react';
 import ReactMarkdown from 'react-markdown'; 
 
+const initialTags = []; // Initial tags state
+
 const ArticleForm = () => {
-  // State hooks to manage form data and UI state
+  // State hooks to manage form data and UI states
   const [title, setTitle] = useState('');
   const [abstract, setAbstract] = useState('');
   const [articleText, setArticleText] = useState('');
-  const [tags, setTags] = useState('');
+  const [tags, setTags] = useState(initialTags);
+  const [tagInput, setTagInput] = useState('');
   const [image, setImage] = useState(null);
   const [imageUrl, setImageUrl] = useState('');
   const [loading, setLoading] = useState(false);
@@ -51,7 +54,7 @@ const ArticleForm = () => {
         title,
         abstract,
         articleText,
-        tags: tags.split(',').map(tag => tag.trim()), // Convert tags string to array
+        tags, // Save tags as an array
         imageUrl, // Store the image URL
         createdAt: new Date(),
         userId: user ? user.uid : 'anonymous', // Store user ID or 'anonymous' if no user is logged in
@@ -63,7 +66,8 @@ const ArticleForm = () => {
       setTitle('');
       setAbstract('');
       setArticleText('');
-      setTags('');
+      setTags([]);
+      setTagInput('');
       setImage(null);
       setImageUrl('');
     } catch (err) {
@@ -72,6 +76,25 @@ const ArticleForm = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  // Handle tag input change
+  const handleTagInput = (e) => {
+    setTagInput(e.target.value);
+  };
+
+  // Handle adding a new tag
+  const handleAddTag = (e) => {
+    if (e.key === 'Enter' && tagInput.trim() !== '' && !tags.includes(tagInput.trim())) {
+      e.preventDefault();
+      setTags(prevTags => [...prevTags, tagInput.trim()]);
+      setTagInput('');
+    }
+  };
+
+  // Handle removing a tag
+  const handleCloseTag = (tagToRemove) => {
+    setTags(tags.filter(tag => tag !== tagToRemove));
   };
 
   return (
@@ -84,63 +107,64 @@ const ArticleForm = () => {
           {/* Title input field */}
           <div className="mb-4">
             <Input
-              clearable
-              bordered
-              labelPlaceholder="Title"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              fullWidth
-              required
-              type="text"
-              placeholder="Title"
+              isRequired
+              type="input"
+              label="Title"
             />
           </div>
           {/* Abstract input field */}
           <div className="mb-4">
             <Textarea
-              bordered
-              labelPlaceholder="Abstract"
               rows={3}
               value={abstract}
               onChange={(e) => setAbstract(e.target.value)}
-              fullWidth
-              required
-              type="text"
-              placeholder="Abstract"
+              isRequired
+              label="Abstract"
             />
           </div>
           {/* Article text input field */}
           <div className="mb-4">
             <Textarea
-              bordered
-              labelPlaceholder="Article Text"
               rows={10}
               value={articleText}
               onChange={(e) => setArticleText(e.target.value)}
-              fullWidth
-              required
-              type="text"
-              placeholder="Article Text"
+              isRequired
+              type="input"
+              label="Article Text"
             />
           </div>
           {/* Preview of the article using ReactMarkdown */}
           <div className="mb-4">
-            <label className="block mb-2 text-gray-700 font-semibold">Preview</label>
+            <label className="block mb-2 text-gray-700 font-semibold">Preview of Markdown</label>
             <Card className="p-4 bg-gray-100 rounded-lg">
               <ReactMarkdown>{articleText}</ReactMarkdown>
             </Card>
           </div>
-          {/* Tags input field */}
+          {/* Tags input and display */}
           <div className="mb-4">
-            <Input
-              clearable
-              bordered
-              value={tags}
-              onChange={(e) => setTags(e.target.value)}
-              fullWidth
-              type="text"
-              placeholder="Tags (comma separated)"
-            />
+            <label htmlFor="tags" className="block mb-2 text-gray-700 font-semibold">Tags</label>
+            <div className="flex flex-wrap items-center gap-2">
+              {tags.map((tag, index) => (
+                <Chip
+                  key={index}
+                  onClose={() => handleCloseTag(tag)}
+                  color="secondary"
+                  variant="flat"
+                >
+                  {tag}
+                </Chip>
+              ))}
+              <Input
+                
+                type="text"
+                label="Enter tags"
+                value={tagInput}
+                onChange={handleTagInput}
+                onKeyDown={handleAddTag}
+              />
+            </div>
           </div>
           {/* Image upload field */}
           <div className="mb-4">

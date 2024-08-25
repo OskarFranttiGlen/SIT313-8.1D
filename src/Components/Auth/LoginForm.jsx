@@ -38,27 +38,22 @@ const LoginForm = () => {
         <form onSubmit={handleLogin} className="space-y-4">
           {/* Email input field */}
           <Input
-            clearable
-            bordered
-            fullWidth
-            size="lg"
-            placeholder="Email"
+            isRequired
             type="email"
+            label="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            required
+            
+            
           />
           {/* Password input field */}
           <Input
-            clearable
-            bordered
-            fullWidth
-            size="lg"
-            placeholder="Password"
+            isRequired
             type="password"
+            label="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            required
+
           />
           {/* Error message display */}
           {error && <p className="text-red-500">{error}</p>}

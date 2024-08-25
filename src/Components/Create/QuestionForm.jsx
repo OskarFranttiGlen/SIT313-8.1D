@@ -85,9 +85,9 @@ const QuestionForm = () => {
           {/* Title input field */}
           <div className="mb-4">
             <Input
-              type="text"
-              placeholder="Title"
-              required
+              isRequired
+              type="input"
+              label="Title"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
             />
@@ -95,9 +95,8 @@ const QuestionForm = () => {
           {/* Problem description textarea */}
           <div className="mb-4">
             <Textarea
-              placeholder="Describe your problem"
-              rows={5}
-              value={problem}
+              isRequired
+              label="Describe your problem"
               onChange={(e) => setProblem(e.target.value)}
               required
             />
@@ -135,8 +134,8 @@ const QuestionForm = () => {
                 </Chip>
               ))}
               <Input
-                type="text"
-                placeholder="Enter tags"
+              type="text"
+               label="Enter tags"
                 value={tagInput}
                 onChange={handleTagInput}
                 onKeyDown={handleAddTag}

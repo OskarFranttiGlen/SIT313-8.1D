@@ -13,7 +13,7 @@ const HeroImage = () => {
       {/* Overlay with text */}
       <div className="absolute inset-0 bg-black bg-opacity-50 flex justify-center items-center">
         {/* Title text centered over the image */}
-        <h1 className="text-white text-4xl text-center">1234</h1>
+        <h1 className="text-white text-4xl text-center">Dev @ Deakin</h1>
       </div>
     </div>
   );

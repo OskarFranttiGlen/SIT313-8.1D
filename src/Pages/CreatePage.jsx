@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import ArticleForm from '../Components/Create/ArticleForm'; 
 import QuestionForm from '../Components/Create/QuestionForm'; 
+import FormSelector from '../Components/Create/FormSelector';
 
 const CreatePage = () => {
   const [postType, setPostType] = useState('question'); // State variable to toggle between 'question' and 'article' forms
@@ -17,29 +18,8 @@ const CreatePage = () => {
       {/* Page title */}
       <h1 className="text-center text-3xl font-semibold mb-8">New Post</h1>
       
-      {/* Radio buttons to switch between Question and Article form */}
-      <div className="flex justify-center mb-6">
-        <label className="mr-5 text-lg">
-          <input
-            type="radio"
-            value="question"
-            checked={postType === 'question'} // Check this radio button if postType is 'question'
-            onChange={() => setPostType('question')} // Update postType to 'question' when this radio button is selected
-            className="mr-2"
-          />
-          Question
-        </label>
-        <label className="text-lg">
-          <input
-            type="radio"
-            value="article"
-            checked={postType === 'article'} // Check this radio button if postType is 'article'
-            onChange={() => setPostType('article')} // Update postType to 'article' when this radio button is selected
-            className="mr-2"
-          />
-          Article
-        </label>
-      </div>
+      {/* Use FormSelector to switch between Question and Article form */}
+      <FormSelector postType={postType} setPostType={setPostType} />
       
       {/* Conditionally render either the QuestionForm or ArticleForm based on postType */}
       {postType === 'question' ? <QuestionForm /> : <ArticleForm />}
